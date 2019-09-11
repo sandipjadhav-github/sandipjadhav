@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ContactInformationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ContactType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PersonContact">
+          <Key>
+            <PropertyRef Name="PersonId" />
+            <PropertyRef Name="ContactTypeId" />
+          </Key>
+          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="ContactTypeId" Type="int" Nullable="false" />
+          <Property Name="ContactTypeValue" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_PersonContact_ContactType">
+          <End Role="ContactType" Type="Self.ContactType" Multiplicity="1" />
+          <End Role="PersonContact" Type="Self.PersonContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonContact">
+              <PropertyRef Name="ContactTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonContact_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="PersonContact" Type="Self.PersonContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonContact">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ContactInformationModelStoreContainer">
+          <EntitySet Name="ContactType" EntityType="Self.ContactType" Schema="CI" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="CI" store:Type="Tables" />
+          <EntitySet Name="PersonContact" EntityType="Self.PersonContact" Schema="CI" store:Type="Tables" />
+          <AssociationSet Name="FK_PersonContact_ContactType" Association="Self.FK_PersonContact_ContactType">
+            <End Role="ContactType" EntitySet="ContactType" />
+            <End Role="PersonContact" EntitySet="PersonContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonContact_Person" Association="Self.FK_PersonContact_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="PersonContact" EntitySet="PersonContact" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ContactInformationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ContactType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PersonContacts" Relationship="Self.FK_PersonContact_ContactType" FromRole="ContactType" ToRole="PersonContact" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PersonContacts" Relationship="Self.FK_PersonContact_Person" FromRole="Person" ToRole="PersonContact" />
+        </EntityType>
+        <EntityType Name="PersonContact">
+          <Key>
+            <PropertyRef Name="PersonId" />
+            <PropertyRef Name="ContactTypeId" />
+          </Key>
+          <Property Name="PersonId" Type="Int32" Nullable="false" />
+          <Property Name="ContactTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ContactTypeValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ContactType" Relationship="Self.FK_PersonContact_ContactType" FromRole="PersonContact" ToRole="ContactType" />
+          <NavigationProperty Name="Person" Relationship="Self.FK_PersonContact_Person" FromRole="PersonContact" ToRole="Person" />
+        </EntityType>
+        <Association Name="FK_PersonContact_ContactType">
+          <End Role="ContactType" Type="Self.ContactType" Multiplicity="1" />
+          <End Role="PersonContact" Type="Self.PersonContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonContact">
+              <PropertyRef Name="ContactTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonContact_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="PersonContact" Type="Self.PersonContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonContact">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ContactInformationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ContactTypes" EntityType="Self.ContactType" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="PersonContacts" EntityType="Self.PersonContact" />
+          <AssociationSet Name="FK_PersonContact_ContactType" Association="Self.FK_PersonContact_ContactType">
+            <End Role="ContactType" EntitySet="ContactTypes" />
+            <End Role="PersonContact" EntitySet="PersonContacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonContact_Person" Association="Self.FK_PersonContact_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PersonContact" EntitySet="PersonContacts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ContactInformationModelStoreContainer" CdmEntityContainer="ContactInformationEntities">
+          <EntitySetMapping Name="ContactTypes">
+            <EntityTypeMapping TypeName="ContactInformationModel.ContactType">
+              <MappingFragment StoreEntitySet="ContactType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="ContactInformationModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PersonContacts">
+            <EntityTypeMapping TypeName="ContactInformationModel.PersonContact">
+              <MappingFragment StoreEntitySet="PersonContact">
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="ContactTypeId" ColumnName="ContactTypeId" />
+                <ScalarProperty Name="ContactTypeValue" ColumnName="ContactTypeValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
